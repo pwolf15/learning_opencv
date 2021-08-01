@@ -10,3 +10,6 @@ target_link_libraries(hello_world ${OpenCV_LIBS})
 
 add_executable(display_video display_video.cpp)
 target_link_libraries(display_video ${OpenCV_LIBS})
+
+add_executable(video_interactive video_interactive.cpp )
+target_link_libraries(video_interactive ${OpenCV_LIBS})
