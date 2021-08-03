@@ -13,3 +13,6 @@ target_link_libraries(display_video ${OpenCV_LIBS})
 
 add_executable(video_interactive video_interactive.cpp )
 target_link_libraries(video_interactive ${OpenCV_LIBS})
+
+add_executable(video_smoothing video_smoothing.cpp )
+target_link_libraries(video_smoothing ${OpenCV_LIBS})
