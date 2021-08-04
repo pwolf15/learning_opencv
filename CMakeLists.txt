@@ -19,3 +19,6 @@ target_link_libraries(video_smoothing ${OpenCV_LIBS})
 
 add_executable(image_transform image_transform.cpp )
 target_link_libraries(image_transform ${OpenCV_LIBS})
+
+add_executable(canny canny.cpp )
+target_link_libraries(canny ${OpenCV_LIBS})
