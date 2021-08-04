@@ -22,3 +22,6 @@ target_link_libraries(image_transform ${OpenCV_LIBS})
 
 add_executable(canny canny.cpp )
 target_link_libraries(canny ${OpenCV_LIBS})
+
+add_executable(pixels pixels.cpp )
+target_link_libraries(pixels ${OpenCV_LIBS})
