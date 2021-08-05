@@ -28,3 +28,6 @@ target_link_libraries(pixels ${OpenCV_LIBS})
 
 add_executable(video_capture video_capture.cpp )
 target_link_libraries(video_capture ${OpenCV_LIBS})
+
+add_executable(log_polar log_polar.cpp )
+target_link_libraries(log_polar ${OpenCV_LIBS})
