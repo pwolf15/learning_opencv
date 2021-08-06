@@ -31,3 +31,6 @@ target_link_libraries(video_capture ${OpenCV_LIBS})
 
 add_executable(log_polar log_polar.cpp )
 target_link_libraries(log_polar ${OpenCV_LIBS})
+
+add_executable(downsample_video downsample_video.cpp )
+target_link_libraries(downsample_video ${OpenCV_LIBS})
