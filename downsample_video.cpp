@@ -41,8 +41,7 @@ int main(int argc, char** argv)
 
     cv::imshow("Example 2-11", bgr_frame);
 
-    cv::GaussianBlur(bgr_frame, out, cv::Size(5,5), 3, 3);
-    cv::GaussianBlur(out, downsampled_frame, cv::Size(5,5), 3, 3);
+    cv::pyrDown(bgr_frame,downsampled_frame);
 
     cv::imshow("Downsampled", downsampled_frame);
     writer << downsampled_frame;
