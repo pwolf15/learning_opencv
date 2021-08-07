@@ -37,3 +37,6 @@ target_link_libraries(downsample_video ${OpenCV_LIBS})
 
 add_executable(downsampling_interactive downsampling_interactive.cpp )
 target_link_libraries(downsampling_interactive ${OpenCV_LIBS})
+
+add_executable(types types.cpp)
+target_link_libraries(types ${OpenCV_LIBS})
