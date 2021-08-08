@@ -5,3 +5,4 @@ OpenCV
 * sample space / image pyramid
 * Nyquist-Shannon Sampling Theorem
 * pyrDown => Gaussian blurring, down sampling
+* traits in C++, variable introspection, 
