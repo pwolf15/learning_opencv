@@ -31,6 +31,18 @@ int main()
   auto r = m * v;
 
   std::cout << r << std::endl;
+
+  cv::Matx<float, 3, 3> m1 = {1,2,3,4,5,6,7,8,9};
+  cv::Vec<float, 3> v1 = {1, 2, 3};
+  auto r1 = m1*v1;
+
+  cv::Matx<float, 3,1> m2 = v1;
+
+  auto r2 = m1*m2;
+  std::cout << r1 << std::endl;
+  std::cout << r2 << std::endl;
+  std::cout << v1.rows << std::endl;
+  std::cout << m2.rows << std::endl;
   
   return 0;
 }
