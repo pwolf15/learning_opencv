@@ -40,3 +40,6 @@ target_link_libraries(downsampling_interactive ${OpenCV_LIBS})
 
 add_executable(types types.cpp)
 target_link_libraries(types ${OpenCV_LIBS})
+
+add_executable(mat_examples mat_examples.cpp)
+target_link_libraries(mat_examples ${OpenCV_LIBS})
