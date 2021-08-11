@@ -43,3 +43,6 @@ target_link_libraries(types ${OpenCV_LIBS})
 
 add_executable(mat_examples mat_examples.cpp)
 target_link_libraries(mat_examples ${OpenCV_LIBS})
+
+add_executable(mat_sum mat_sum.cpp)
+target_link_libraries(mat_sum ${OpenCV_LIBS})
