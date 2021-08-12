@@ -6,3 +6,6 @@ OpenCV
 * Nyquist-Shannon Sampling Theorem
 * pyrDown => Gaussian blurring, down sampling
 * traits in C++, variable introspection, 
+* matrix inversion via: Cholesky, LU, and SVD decomposition
+* saturation casting
+* MatExpr
