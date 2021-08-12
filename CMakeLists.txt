@@ -46,3 +46,6 @@ target_link_libraries(mat_examples ${OpenCV_LIBS})
 
 add_executable(mat_sum mat_sum.cpp)
 target_link_libraries(mat_sum ${OpenCV_LIBS})
+
+add_executable(multi_mat_sum multi_mat_sum.cpp)
+target_link_libraries(multi_mat_sum ${OpenCV_LIBS})
