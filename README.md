@@ -9,3 +9,4 @@ OpenCV
 * matrix inversion via: Cholesky, LU, and SVD decomposition
 * saturation casting
 * MatExpr
+* SparseMat
