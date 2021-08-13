@@ -52,3 +52,6 @@ target_link_libraries(multi_mat_sum ${OpenCV_LIBS})
 
 add_executable(sparse_mat sparse_mat.cpp)
 target_link_libraries(sparse_mat ${OpenCV_LIBS})
+
+add_executable(typewriter typewriter.cpp)
+target_link_libraries(typewriter ${OpenCV_LIBS})
