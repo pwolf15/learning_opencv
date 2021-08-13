@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "opencv2/core.hpp"
 
 int main(int argc, char** argv)
@@ -8,10 +10,14 @@ int main(int argc, char** argv)
   for (int i = 0; i < 10; i++)
   {
     int idx[2];
-    idx[0] = size[0] * rand();
-    idx[1] = size[1] * rand();
+    int rand1 = rand() % 10;
+    int rand2 = rand() % 10;
+    idx[0] = size[0] * rand1;
+    idx[1] = size[1] * rand2;
 
     sm.ref<float>(idx) += 1.0f;
+    std::cout << size[0] << "," << size[1] << "," << rand1 << "," << rand2 << "," << idx[0] << "," << idx[1] << "," << sm.ref<float>(idx) << std::endl;
+
   }
 
   cv::SparseMatConstIterator_<float> it = sm.begin<float>();
