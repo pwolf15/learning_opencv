@@ -3,13 +3,15 @@
 
 #include <iostream>
 
-void drawSquare(cv::Mat& m, int r, int c, int w, int h)
+#include "keys.hpp"
+
+void drawSquare(cv::Mat& m, int r, int c, int w, int h, int keyIdx)
 {
   for (int i = r; i < r + h; ++i)
   {
     for (int j = c; j < c + w; ++j)
     {
-      m.at<uchar>(i,j) = 255;
+      m.at<uchar>(i,j) = numbers[keyIdx][(j-c)+w*(i-r)] * 255;
     }
   }
 }
@@ -41,7 +43,7 @@ int main()
     if (c >= 48 && c <= 57)
     {
       std::cout << "Draw square" << std::endl;
-      drawSquare(m, rowIdx, colIdx, w, h);
+      drawSquare(m, rowIdx, colIdx, w, h, c - 48);
       colIdx += w;
       
       if (colIdx == 500)
