@@ -107,7 +107,6 @@ int main()
     }
     else if (c == KeyCodes::LEFT) // l
     {
-      std::cout << "LEFT" << std::endl;
       if (colIdx == 0)
       {
         if (rowIdx != 0)
@@ -122,7 +121,6 @@ int main()
     }
     else if (c == KeyCodes::UP) // u
     {
-          std::cout << "UP" << std::endl;
       if (rowIdx != 0)
       {
         rowIdx -= h;
@@ -130,7 +128,6 @@ int main()
     }
     else if (c == KeyCodes::RIGHT) // r
     {
-      std::cout << "RIGHT" << std::endl;
       if (colIdx == windowWidth)
       {
         colIdx = 0;
@@ -144,7 +141,6 @@ int main()
     }
     else if (c == KeyCodes::DOWN) // d
     {
-      std::cout << "DOWN" << std::endl;
       if (rowIdx != windowHeight)
       {
         rowIdx += h;
