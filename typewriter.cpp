@@ -27,6 +27,21 @@ void drawBlack(cv::Mat& m, int r, int c, int w, int h)
   }
 }
 
+void drawSquareCustom(cv::Mat& m, int r, int c, int w, int h, int keyIdx)
+{
+  for (int i = r; i < r + h; ++i)
+  {
+    for (int j = c; j < c + w; ++j)
+    {
+      m.at<cv::Vec3b>(i,j) = {
+                  (uchar)(rand() % 255),
+                  (uchar)(rand() % 255),
+                  (uchar)(rand() % 255)
+                };
+    }
+  }
+}
+
 enum KeyCodes
 {
   ZERO = 48,
@@ -34,7 +49,8 @@ enum KeyCodes
   LEFT = 81,
   UP = 82,
   RIGHT = 83,
-  DOWN = 84
+  DOWN = 84,
+  K = 107,
 };
 
 int main()
@@ -50,14 +66,11 @@ int main()
 
   cv::Mat m(windowWidth, windowHeight, CV_8UC1);
 
-  // for (int i = 0; i < m.rows; ++i)
-  // {
-  //   for (int j = 0; j < m.cols; ++j)
-  //   {
-  //     m.at<uchar>(i,j) = rand() % 255;
-  //   }
-  // }
-
+  std::vector<std::vector<int>> vals(500/20);
+  for (int i = 0; i < vals.size(); ++i)
+  {
+    vals[i].resize(500/10);
+  }
 
 
   while (true)
@@ -77,6 +90,7 @@ int main()
     {
       std::cout << "Draw square" << std::endl;
       drawSquare(m, rowIdx, colIdx, w, h, c - KeyCodes::ZERO);
+      vals[rowIdx][colIdx] = c - KeyCodes::ZERO;
       colIdx += w;
       
       if (colIdx == windowWidth)
@@ -93,6 +107,7 @@ int main()
     else if (c == 8) // backspace
     {
       drawBlack(m, rowIdx, colIdx, w, h);
+      vals[rowIdx][colIdx] = 0;
       if (colIdx == 0)
       {
         if (rowIdx != 0)
@@ -146,7 +161,24 @@ int main()
         rowIdx += h;
       }
     }
-
+    else if (c == KeyCodes::K)
+    {
+      std::cout << "k" << std::endl;
+      cv::Mat m1(windowWidth, windowHeight, CV_8UC3);
+      for (int i = 0; i < windowHeight / h; ++i)
+      {
+        for (int j = 0; j < windowWidth / w; ++j)
+        {
+          m1.at<cv::Vec3b>(i,j) = {
+            (uchar)(rand() % 255),
+            (uchar)(rand() % 255),
+            (uchar)(rand() % 255)
+          };
+          drawSquareCustom(m1, i, j, w, h, 0);
+        }
+      }
+      m = m1;
+    }
   }
 
   return 0;
