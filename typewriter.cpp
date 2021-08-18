@@ -29,15 +29,17 @@ void drawBlack(cv::Mat& m, int r, int c, int w, int h)
 
 void drawSquareCustom(cv::Mat& m, int r, int c, int w, int h, int keyIdx)
 {
-  for (int i = r; i < r + h; ++i)
-  {
-    for (int j = c; j < c + w; ++j)
-    {
-      m.at<cv::Vec3b>(i,j) = {
+  cv::Vec3b color = {
                   (uchar)(rand() % 255),
                   (uchar)(rand() % 255),
                   (uchar)(rand() % 255)
                 };
+
+  for (int i = r; i < r + h; ++i)
+  {
+    for (int j = c; j < c + w; ++j)
+    {
+      m.at<cv::Vec3b>(i,j) = numbers[keyIdx][(j-c)+w*(i-r)] * color;
     }
   }
 }
@@ -90,7 +92,7 @@ int main()
     {
       std::cout << "Draw square" << std::endl;
       drawSquare(m, rowIdx, colIdx, w, h, c - KeyCodes::ZERO);
-      vals[rowIdx][colIdx] = c - KeyCodes::ZERO;
+      vals[rowIdx / h][colIdx / w] = c - KeyCodes::ZERO;
       colIdx += w;
       
       if (colIdx == windowWidth)
@@ -169,12 +171,7 @@ int main()
       {
         for (int j = 0; j < windowWidth / w; ++j)
         {
-          m1.at<cv::Vec3b>(i,j) = {
-            (uchar)(rand() % 255),
-            (uchar)(rand() % 255),
-            (uchar)(rand() % 255)
-          };
-          drawSquareCustom(m1, i, j, w, h, 0);
+          drawSquareCustom(m1, i * h, j * w, w, h, vals[i][j]);
         }
       }
       m = m1;
