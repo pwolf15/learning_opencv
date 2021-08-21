@@ -87,25 +87,25 @@ struct TypewriterState
   {
     ++curCol;
 
-    if (curCol == numCols)
+    if (curCol >= numCols)
     {
+      curCol = numCols;
       return false;
     }
 
-    return true;
+    return curRow >= 0 && curRow < numRows;
   }
 
   bool advanceRow()
   {
     ++curRow;
-    curCol = 0;
-
-    if (curRow == numRows)
+    if (curRow >= numRows)
     {
+      curRow = numRows;
       return false;
     }
 
-    return true;
+    return curCol >= 0 && curCol < numCols;
   }
 
   bool decrementCol()
@@ -119,7 +119,7 @@ struct TypewriterState
       --curCol;
     }
 
-    return true;
+    return curRow >= 0 && curRow < numRows;
   }
 
   bool decrementRow()
@@ -133,7 +133,7 @@ struct TypewriterState
       --curRow;
     }
 
-    return true;
+    return curCol >= 0 && curCol < numCols;
   }
 };
 
@@ -166,6 +166,16 @@ int main()
   int cursorCounter = 0;
   bool toggleCursor = true;
   bool canType = true;
+  auto restoreSquare = [&]() {
+    if (canType)
+    {
+      drawCursor(m, twState.curRow, twState.curCol, w, h, false);
+      if (twState.grid[twState.curRow][twState.curCol] != -1)
+      {
+          drawNumber(m , twState.curRow, twState.curCol, w, h, twState.grid[twState.curRow][twState.curCol]);
+      }
+    }
+  };
 
   while (true)
   {
@@ -213,34 +223,22 @@ int main()
     }
     else if (c == KeyCodes::LEFT)  // l
     {
-      if (canType)
-      {
-        drawCursor(m, twState.curRow, twState.curCol, w, h, false);
-      }
+      restoreSquare();
       canType = twState.decrementCol();
     }
     else if (c == KeyCodes::UP)  // u
     {
-      if (canType)
-      {
-        drawCursor(m, twState.curRow, twState.curCol, w, h, false);
-      }
+      restoreSquare();
       canType = twState.decrementRow();
     }
     else if (c == KeyCodes::RIGHT)  // r
     {
-      if (canType)
-      {
-        drawCursor(m, twState.curRow, twState.curCol, w, h, false);
-      }
+      restoreSquare();
       canType = twState.advanceCol();
     }
     else if (c == KeyCodes::DOWN)  // d
     {
-      if (canType)
-      {
-        drawCursor(m, twState.curRow, twState.curCol, w, h, false);
-      }
+      restoreSquare();
       canType = twState.advanceRow();
     }
     // else if (c == KeyCodes::K)
