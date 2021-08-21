@@ -36,9 +36,9 @@ void drawCursor(cv::Mat& m, int r, int c, int w, int h, bool toggle)
 
 void drawBlack(cv::Mat& m, int r, int c, int w, int h)
 {
-  for (int i = r; i < r + h; ++i)
+  for (int i = r * h; i < (r * h) + h; ++i)
   {
-    for (int j = c; j < c + w; ++j)
+    for (int j = (c * w); j < (c * w) + w; ++j)
     {
       m.at<uchar>(i, j) = 0;
     }
@@ -62,6 +62,7 @@ void drawSquareCustom(cv::Mat& m, int r, int c, int w, int h, int keyIdx)
 enum KeyCodes
 {
   BACKSPACE = 8,
+  CARRIAGE_RETURN = 13,
   ESCAPE = 27,
   ZERO = 48,
   NINE = KeyCodes::ZERO + 9,
@@ -82,14 +83,43 @@ struct TypewriterState
   int charWidth = 0;
   int charHeight = 0;
 
-  bool advance()
+  bool advanceCol()
   {
     ++curCol;
+
     if (curCol == numCols)
     {
-      curCol = 0;
-      ++curRow;
+      return false;
     }
+
+    return true;
+  }
+
+  bool advanceRow()
+  {
+    ++curRow;
+    curCol = 0;
+
+    if (curRow == numRows)
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  bool decrementCol()
+  {
+    if (curCol == 0)
+    {
+      // skip
+    }
+    else
+    {
+      --curCol;
+    }
+
+    return true;
   }
 };
 
@@ -121,49 +151,48 @@ int main()
 
   int cursorCounter = 0;
   bool toggleCursor = true;
+  bool canType = true;
 
   while (true)
   {
     cv::imshow("Typewriter", m);
-
 
     char c = (char)cv::waitKey(10);
     if (c == KeyCodes::ESCAPE)
     {
       break;
     }
-    // else if (c == KeyCodes::BACKSPACE)  // backspace
-    // {
-    //   drawBlack(m, rowIdx, colIdx, w, h);
-    //   vals[rowIdx][colIdx] = 0;
-    //   if (colIdx == 0)
-    //   {
-    //     if (rowIdx != 0)
-    //     {
-    //       rowIdx -= h;
-    //     }
-    //   }
-    //   else
-    //   {
-    //     colIdx -= w;
-    //   }
-    // }
+    else if (c == KeyCodes::BACKSPACE)  // backspace
+    {
+      if (canType)
+      {
+        drawCursor(m, twState.curRow, twState.curCol, w, h, false);
+      }
+      
+      canType = twState.decrementCol();
+      std::cout << twState.curCol << std::endl;
+
+      if (canType)
+      {
+        drawBlack(m, twState.curRow, twState.curCol, w, h);
+        twState.grid[twState.curRow][twState.curCol] = -1;
+      }
+    }
     // else if (colIdx >= windowWidth || rowIdx >= windowHeight)
     // {
     //   continue;
     // }
-    else if (c >= KeyCodes::ZERO && c <= KeyCodes::NINE)  // number
+    else if (c >= KeyCodes::ZERO && c <= KeyCodes::NINE && canType)  // number
     {
       int numIdx = c - KeyCodes::ZERO;
       drawNumber(m, twState.curRow, twState.curCol, w, h, numIdx);
       twState.grid[twState.curRow][twState.curCol] = numIdx;
-      twState.advance();
+      canType = twState.advanceCol();
     }
-    // else if (c == 13)  // carriage return
-    // {
-    //   rowIdx += h;
-    //   colIdx = 0;
-    // }
+    else if (c == KeyCodes::CARRIAGE_RETURN)  // carriage return
+    {
+      canType = twState.advanceRow();
+    }
     // else if (c == KeyCodes::LEFT)  // l
     // {
     //   if (colIdx == 0)
@@ -217,16 +246,20 @@ int main()
     //   }
     //   m = m1;
     // }
-    drawCursor(m, twState.curRow, twState.curCol, w, h, toggleCursor);
 
-    if (cursorCounter == 30)
+    if (canType)
     {
-      std::cout << twState.curRow << "," << twState.curCol << std::endl;
-      cursorCounter = 0;
-      toggleCursor = !toggleCursor;
-    }
+      drawCursor(m, twState.curRow, twState.curCol, w, h, toggleCursor);
 
-    cursorCounter++;
+      if (cursorCounter == 30)
+      {
+        std::cout << twState.curRow << "," << twState.curCol << std::endl;
+        cursorCounter = 0;
+        toggleCursor = !toggleCursor;
+      }
+
+      cursorCounter++;
+    }
   }
 
   return 0;
