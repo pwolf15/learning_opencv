@@ -5,60 +5,6 @@
 
 #include "keys.hpp"
 
-void drawNumber(cv::Mat& m, int r, int c, int w, int h, int keyIdx)
-{
-  for (int i = r * h; i < (r * h) + h; ++i)
-  {
-    for (int j = (c * w); j < (c * w) + w; ++j)
-    {
-      m.at<uchar>(i, j) = numbers[keyIdx][(j - (c * w)) + w * (i - (r * h))] * 255;
-    }
-  }
-}
-
-void drawCursor(cv::Mat& m, int r, int c, int w, int h, bool toggle)
-{
-  for (int i = r * h; i < (r * h) + h; ++i)
-  {
-    for (int j = (c * w); j < (c * w) + w; ++j)
-    {
-      if (toggle)
-      {
-        m.at<uchar>(i, j) = cursor[(j - (c * w)) + w * (i - (r * h))] * 255;
-      }
-      else
-      {
-        m.at<uchar>(i, j) = 0;
-      }
-    }
-  }
-}
-
-void drawBlack(cv::Mat& m, int r, int c, int w, int h)
-{
-  for (int i = r * h; i < (r * h) + h; ++i)
-  {
-    for (int j = (c * w); j < (c * w) + w; ++j)
-    {
-      m.at<uchar>(i, j) = 0;
-    }
-  }
-}
-
-void drawSquareCustom(cv::Mat& m, int r, int c, int w, int h, int keyIdx)
-{
-  cv::Vec3b color = {(uchar)(rand() % 255), (uchar)(rand() % 255),
-                     (uchar)(rand() % 255)};
-
-  for (int i = r; i < r + h; ++i)
-  {
-    for (int j = c; j < c + w; ++j)
-    {
-      m.at<cv::Vec3b>(i, j) = numbers[keyIdx][(j - c) + w * (i - r)] * color;
-    }
-  }
-}
-
 enum KeyCodes
 {
   BACKSPACE = 8,
@@ -73,9 +19,17 @@ enum KeyCodes
   K = 107,
 };
 
+enum MatOption
+{
+  GRAYSCALE = 0,
+  COLOR = 1
+};
+
 struct TypewriterState
 {
-  std::vector<std::vector<int>> grid; // values of each spot in grid  std::vector<std::vector<int>> vals(500 / 20);
+  std::vector<std::vector<int>>
+      grid;  // values of each spot in grid  std::vector<std::vector<int>>
+             // vals(500 / 20);
   int curRow = 0;
   int curCol = 0;
   int numRows = 0;
@@ -137,6 +91,122 @@ struct TypewriterState
   }
 };
 
+void drawNumber(cv::Mat& m,
+                int r,
+                int c,
+                int w,
+                int h,
+                int keyIdx,
+                MatOption option = MatOption::GRAYSCALE)
+{
+  if (option == MatOption::GRAYSCALE)
+  {
+    for (int i = r * h; i < (r * h) + h; ++i)
+    {
+      for (int j = (c * w); j < (c * w) + w; ++j)
+      {
+        m.at<uchar>(i, j) =
+            numbers[keyIdx][(j - (c * w)) + w * (i - (r * h))] * 255;
+      }
+    }
+  }
+  else if (option == MatOption::COLOR)
+  {
+    cv::Vec3b color = {
+      (uchar)(rand() % 255),
+      (uchar)(rand() % 255),
+      (uchar)(rand() % 255),
+    };
+    for (int i = r * h; i < (r * h) + h; ++i)
+    {
+      for (int j = (c * w); j < (c * w) + w; ++j)
+      {
+        m.at<cv::Vec3b>(i, j) = {
+            (uchar)((numbers[keyIdx][(j - (c * w)) + w * (i - (r * h))] != 0) * (color[0])),
+            (uchar)((numbers[keyIdx][(j - (c * w)) + w * (i - (r * h))] != 0) * (color[1])),
+            (uchar)((numbers[keyIdx][(j - (c * w)) + w * (i - (r * h))] != 0) * (color[2]))
+        };
+      }
+    }
+  }
+}
+
+void drawCursor(cv::Mat& m,
+                int r,
+                int c,
+                int w,
+                int h,
+                bool toggle,
+                MatOption option = MatOption::GRAYSCALE)
+{
+  if (option == MatOption::GRAYSCALE)
+  {
+    for (int i = r * h; i < (r * h) + h; ++i)
+    {
+      for (int j = (c * w); j < (c * w) + w; ++j)
+      {
+        if (toggle)
+        {
+          m.at<uchar>(i, j) = cursor[(j - (c * w)) + w * (i - (r * h))] * 255;
+        }
+        else
+        {
+          m.at<uchar>(i, j) = 0;
+        }
+      }
+    }
+  }
+  else if (option == MatOption::COLOR)
+  {
+    for (int i = r * h; i < (r * h) + h; ++i)
+    {
+      for (int j = (c * w); j < (c * w) + w; ++j)
+      {
+        if (toggle)
+        {
+          m.at<cv::Vec3b>(i, j) = {
+              cursor[(j - (c * w)) + w * (i - (r * h))] * 255,
+              cursor[(j - (c * w)) + w * (i - (r * h))] * 255,
+              cursor[(j - (c * w)) + w * (i - (r * h))] * 255};
+        }
+        else
+        {
+          m.at<cv::Vec3b>(i, j) = {0, 0, 0};
+        }
+      }
+    }
+  }
+}
+
+void drawBlack(cv::Mat& m,
+               int r,
+               int c,
+               int w,
+               int h,
+               MatOption option = MatOption::GRAYSCALE)
+{
+  if (option == MatOption::GRAYSCALE)
+  {
+    for (int i = r * h; i < (r * h) + h; ++i)
+    {
+      for (int j = (c * w); j < (c * w) + w; ++j)
+      {
+        m.at<uchar>(i, j) = 0;
+      }
+    }
+  }
+  else if (option == MatOption::COLOR)
+  {
+    for (int i = r * h; i < (r * h) + h; ++i)
+    {
+      for (int j = (c * w); j < (c * w) + w; ++j)
+      {
+        m.at<cv::Vec3b>(i, j) = {0, 0, 0};
+      }
+    }
+  }
+}
+
 int main()
 {
   cv::namedWindow("Typewriter", cv::WINDOW_AUTOSIZE);
@@ -146,9 +216,10 @@ int main()
   int colIdx = 0;
 
   cv::Mat m(windowWidth, windowHeight, CV_8UC1);
+  cv::Mat m1(windowWidth, windowHeight, CV_8UC3);
 
   TypewriterState twState;
-  const int w = twState.charWidth =  10;
+  const int w = twState.charWidth = 10;
   const int h = twState.charHeight = 20;
   int numRows = twState.numRows = windowHeight / h;
   int numCols = twState.numCols = windowWidth / w;
@@ -159,27 +230,37 @@ int main()
     twState.grid.push_back(cols);
     for (size_t j = 0; j < numCols; ++j)
     {
-      twState.grid[i].push_back(-1); // null value
+      twState.grid[i].push_back(-1);  // null value
     }
   }
 
   int cursorCounter = 0;
   bool toggleCursor = true;
   bool canType = true;
-  auto restoreSquare = [&]() {
+  MatOption option = MatOption::GRAYSCALE;
+  auto restoreSquare = [&]()
+  {
     if (canType)
     {
       drawCursor(m, twState.curRow, twState.curCol, w, h, false);
       if (twState.grid[twState.curRow][twState.curCol] != -1)
       {
-          drawNumber(m , twState.curRow, twState.curCol, w, h, twState.grid[twState.curRow][twState.curCol]);
+        drawNumber(m, twState.curRow, twState.curCol, w, h,
+                   twState.grid[twState.curRow][twState.curCol]);
       }
     }
   };
 
   while (true)
   {
-    cv::imshow("Typewriter", m);
+    if (option == MatOption::GRAYSCALE)
+    {
+      cv::imshow("Typewriter", m);
+    }
+    else
+    {
+      cv::imshow("Typewriter", m1);
+    }
 
     char c = (char)cv::waitKey(10);
     if (c == KeyCodes::ESCAPE)
@@ -190,26 +271,43 @@ int main()
     {
       if (canType)
       {
-        drawCursor(m, twState.curRow, twState.curCol, w, h, false);
+        if (option == MatOption::GRAYSCALE)
+        {
+          drawCursor(m, twState.curRow, twState.curCol, w, h, false, option);
+        }
+        else 
+        {
+           drawCursor(m1, twState.curRow, twState.curCol, w, h, false, option);
+        }
       }
-      
+
       canType = twState.decrementCol();
       std::cout << twState.curCol << std::endl;
 
       if (canType)
       {
-        drawBlack(m, twState.curRow, twState.curCol, w, h);
+        if (option == MatOption::GRAYSCALE)
+        {
+          drawBlack(m, twState.curRow, twState.curCol, w, h, option);
+        }
+        else 
+        {
+           drawBlack(m1, twState.curRow, twState.curCol, w, h, option);
+        }
         twState.grid[twState.curRow][twState.curCol] = -1;
       }
     }
-    // else if (colIdx >= windowWidth || rowIdx >= windowHeight)
-    // {
-    //   continue;
-    // }
     else if (c >= KeyCodes::ZERO && c <= KeyCodes::NINE && canType)  // number
     {
       int numIdx = c - KeyCodes::ZERO;
-      drawNumber(m, twState.curRow, twState.curCol, w, h, numIdx);
+      if (option == MatOption::GRAYSCALE)
+      {
+        drawNumber(m, twState.curRow, twState.curCol, w, h, numIdx, option);
+      }
+      else 
+      {
+        drawNumber(m1, twState.curRow, twState.curCol, w, h, numIdx, option);
+      }
       twState.grid[twState.curRow][twState.curCol] = numIdx;
       canType = twState.advanceCol();
     }
@@ -217,7 +315,14 @@ int main()
     {
       if (canType)
       {
-        drawCursor(m, twState.curRow, twState.curCol, w, h, false);
+        if (option == MatOption::GRAYSCALE)
+        {
+          drawCursor(m, twState.curRow, twState.curCol, w, h, false, option);
+        }
+        else 
+        {
+          drawCursor(m1, twState.curRow, twState.curCol, w, h, false, option);
+        }
       }
       canType = twState.advanceRow();
     }
@@ -241,19 +346,48 @@ int main()
       restoreSquare();
       canType = twState.advanceRow();
     }
-    // else if (c == KeyCodes::K)
-    // {
-    //   std::cout << "k" << std::endl;
-    //   cv::Mat m1(windowWidth, windowHeight, CV_8UC3);
-    //   for (int i = 0; i < windowHeight / h; ++i)
-    //   {
-    //     for (int j = 0; j < windowWidth / w; ++j)
-    //     {
-    //       drawSquareCustom(m1, i * h, j * w, w, h, vals[i][j]);
-    //     }
-    //   }
-    //   m = m1;
-    // }
+    else if (c == KeyCodes::K)
+    {
+      std::cout << "k, " << option << std::endl;
+      if (option == MatOption::GRAYSCALE)
+      {
+        option = MatOption::COLOR;
+        for (size_t i = 0; i < twState.numRows; ++i)
+        {
+          for (size_t j = 0; j < twState.numCols; ++j)
+          {
+            if (twState.grid[i][j] != -1)
+            {
+              drawNumber(m1, i, j, w, h,
+                         twState.grid[i][j], option);
+            }
+            else
+            {
+              drawBlack(m1, i, j, w, h, option);
+            }
+          }
+        }
+      }
+      else if (option == MatOption::COLOR)
+      {
+        option = MatOption::GRAYSCALE;
+        for (size_t i = 0; i < twState.numRows; ++i)
+        {
+          for (size_t j = 0; j < twState.numCols; ++j)
+          {
+            if (twState.grid[i][j] != -1)
+            {
+              drawNumber(m, i, j, w, h,
+                         twState.grid[i][j], option);
+            }
+            else
+            {
+              drawBlack(m, i, j, w, h, option);
+            }
+          }
+        }
+      }
+    }
 
     if (canType)
     {
@@ -261,16 +395,44 @@ int main()
       {
         if (toggleCursor)
         {
-          drawCursor(m, twState.curRow, twState.curCol, w, h, toggleCursor);
+          if (option == MatOption::GRAYSCALE)
+          {
+            drawCursor(m, twState.curRow, twState.curCol, w, h, toggleCursor,
+                                option);
+          }
+          else 
+          {
+            drawCursor(m1, twState.curRow, twState.curCol, w, h, toggleCursor,
+                                option);
+          }
         }
         else
         {
-          drawNumber(m , twState.curRow, twState.curCol, w, h, twState.grid[twState.curRow][twState.curCol]);
+
+          if (option == MatOption::GRAYSCALE)
+          {
+            drawNumber(m, twState.curRow, twState.curCol, w, h,
+                                twState.grid[twState.curRow][twState.curCol], option);
+          }
+          else 
+          {
+            drawNumber(m1, twState.curRow, twState.curCol, w, h,
+                                twState.grid[twState.curRow][twState.curCol], option);
+          }
         }
       }
       else
       {
-        drawCursor(m, twState.curRow, twState.curCol, w, h, toggleCursor);
+        if (option == MatOption::GRAYSCALE)
+        {
+          drawCursor(m, twState.curRow, twState.curCol, w, h, toggleCursor,
+            option);
+        }
+        else 
+        {
+          drawCursor(m1, twState.curRow, twState.curCol, w, h, toggleCursor,
+                    option);
+        }
       }
 
       if (cursorCounter == 30)
