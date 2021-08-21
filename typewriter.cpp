@@ -121,6 +121,20 @@ struct TypewriterState
 
     return true;
   }
+
+  bool decrementRow()
+  {
+    if (curRow == 0)
+    {
+      // skip
+    }
+    else
+    {
+      --curRow;
+    }
+
+    return true;
+  }
 };
 
 int main()
@@ -191,48 +205,44 @@ int main()
     }
     else if (c == KeyCodes::CARRIAGE_RETURN)  // carriage return
     {
+      if (canType)
+      {
+        drawCursor(m, twState.curRow, twState.curCol, w, h, false);
+      }
       canType = twState.advanceRow();
     }
-    // else if (c == KeyCodes::LEFT)  // l
-    // {
-    //   if (colIdx == 0)
-    //   {
-    //     if (rowIdx != 0)
-    //     {
-    //       rowIdx -= h;
-    //     }
-    //   }
-    //   else
-    //   {
-    //     colIdx -= w;
-    //   }
-    // }
-    // else if (c == KeyCodes::UP)  // u
-    // {
-    //   if (rowIdx != 0)
-    //   {
-    //     rowIdx -= h;
-    //   }
-    // }
-    // else if (c == KeyCodes::RIGHT)  // r
-    // {
-    //   if (colIdx == windowWidth)
-    //   {
-    //     colIdx = 0;
-    //     rowIdx += h;
-    //   }
-    //   else
-    //   {
-    //     colIdx += w;
-    //   }
-    // }
-    // else if (c == KeyCodes::DOWN)  // d
-    // {
-    //   if (rowIdx != windowHeight)
-    //   {
-    //     rowIdx += h;
-    //   }
-    // }
+    else if (c == KeyCodes::LEFT)  // l
+    {
+      if (canType)
+      {
+        drawCursor(m, twState.curRow, twState.curCol, w, h, false);
+      }
+      canType = twState.decrementCol();
+    }
+    else if (c == KeyCodes::UP)  // u
+    {
+      if (canType)
+      {
+        drawCursor(m, twState.curRow, twState.curCol, w, h, false);
+      }
+      canType = twState.decrementRow();
+    }
+    else if (c == KeyCodes::RIGHT)  // r
+    {
+      if (canType)
+      {
+        drawCursor(m, twState.curRow, twState.curCol, w, h, false);
+      }
+      canType = twState.advanceCol();
+    }
+    else if (c == KeyCodes::DOWN)  // d
+    {
+      if (canType)
+      {
+        drawCursor(m, twState.curRow, twState.curCol, w, h, false);
+      }
+      canType = twState.advanceRow();
+    }
     // else if (c == KeyCodes::K)
     // {
     //   std::cout << "k" << std::endl;
@@ -249,7 +259,21 @@ int main()
 
     if (canType)
     {
-      drawCursor(m, twState.curRow, twState.curCol, w, h, toggleCursor);
+      if (twState.grid[twState.curRow][twState.curCol] != -1)
+      {
+        if (toggleCursor)
+        {
+          drawCursor(m, twState.curRow, twState.curCol, w, h, toggleCursor);
+        }
+        else
+        {
+          drawNumber(m , twState.curRow, twState.curCol, w, h, twState.grid[twState.curRow][twState.curCol]);
+        }
+      }
+      else
+      {
+        drawCursor(m, twState.curRow, twState.curCol, w, h, toggleCursor);
+      }
 
       if (cursorCounter == 30)
       {
