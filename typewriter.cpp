@@ -242,11 +242,23 @@ int main()
   {
     if (canType)
     {
-      drawCursor(m, twState.curRow, twState.curCol, w, h, false);
-      if (twState.grid[twState.curRow][twState.curCol] != -1)
+      if (option == MatOption::GRAYSCALE)
       {
-        drawNumber(m, twState.curRow, twState.curCol, w, h,
-                   twState.grid[twState.curRow][twState.curCol]);
+        drawCursor(m, twState.curRow, twState.curCol, w, h, false, option);
+        if (twState.grid[twState.curRow][twState.curCol] != -1)
+        {
+          drawNumber(m, twState.curRow, twState.curCol, w, h,
+                    twState.grid[twState.curRow][twState.curCol], option);
+        }
+      }
+      else 
+      {
+        drawCursor(m1, twState.curRow, twState.curCol, w, h, false, option);
+        if (twState.grid[twState.curRow][twState.curCol] != -1)
+        {
+          drawNumber(m1, twState.curRow, twState.curCol, w, h,
+                    twState.grid[twState.curRow][twState.curCol], option);
+        }
       }
     }
   };
