@@ -19,22 +19,25 @@ enum KeyCodes
 
 int main()
 {
-  cv::Mat m(100, 200, CV_8UC1);
-  cv::Mat mI(100, 200, CV_32FC1);
+  int w = 100;
+  int h = 200;
+  cv::Mat m(w, h, CV_8UC1);
+  cv::Mat mI(w, h, CV_32FC1);
   cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
   cv::namedWindow("Integral image", cv::WINDOW_AUTOSIZE);
 
-  for (int i = 0; i < 100; ++i)
+  for (int i = 0; i < w; ++i)
   {
-    for (int j = 0; j < 200; ++j)
+    for (int j = 0; j < h; ++j)
     {
-      m.at<uchar>(i,j) = rand() % 255;
+      m.at<uchar>(i,j) = rand() % 256;
     }
   }
 
-  for (int i = 0; i < 100; ++i)
+  int maxVal = 0;
+  for (int i = 0; i < w; ++i)
   {
-    for (int j = 0; j < 200; ++j)
+    for (int j = 0; j < h; ++j)
     {
       int pixelValue = 0;
       for (int k = 0; k < i; ++k)
@@ -44,9 +47,16 @@ int main()
           pixelValue += (float)m.at<uchar>(k,l);
         }
       }
-
-      std::cout << pixelValue << std::endl;
       mI.at<float>(i,j) = pixelValue;
+      maxVal = std::max(maxVal, pixelValue);
+    }
+  }
+
+  for (int i = 0; i < w; ++i)
+  {
+    for (int j = 0; j < h; ++j)
+    {
+      mI.at<float>(i,j) = (float)mI.at<float>(i,j) / (float)maxVal;
     }
   }
 
