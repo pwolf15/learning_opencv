@@ -108,6 +108,12 @@ void scale_image(cv::Mat& m, int w, int h, int maxVal)
   }
 }
 
+int sum_pixels(cv::Mat& mI, int r0, int c0, int r1, int c1)
+{
+  // sum = mI[r1][c1] - mI[r0][c1] - mI[r1][c0] + m1[r0][c0]
+  return 0;
+}
+
 int main()
 {
   int w = 200;
