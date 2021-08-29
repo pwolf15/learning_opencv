@@ -17,15 +17,8 @@ enum KeyCodes
   K = 107,
 };
 
-int main()
+void randomize_image(cv::Mat& m, int w, int h)
 {
-  int w = 100;
-  int h = 200;
-  cv::Mat m(w, h, CV_8UC1);
-  cv::Mat mI(w, h, CV_32FC1);
-  cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
-  cv::namedWindow("Integral image", cv::WINDOW_AUTOSIZE);
-
   for (int i = 0; i < w; ++i)
   {
     for (int j = 0; j < h; ++j)
@@ -33,8 +26,10 @@ int main()
       m.at<uchar>(i,j) = rand() % 256;
     }
   }
+}
 
-  int maxVal = 0;
+void generate_integral_image(cv::Mat& mI, cv::Mat m, int w, int h)
+{
   for (int i = 0; i < w; ++i)
   {
     for (int j = 0; j < h; ++j)
@@ -48,17 +43,50 @@ int main()
         }
       }
       mI.at<float>(i,j) = pixelValue;
-      maxVal = std::max(maxVal, pixelValue);
     }
   }
+}
 
+int max_val(cv::Mat m, int w, int h)
+{
+  float maxVal = 0;
   for (int i = 0; i < w; ++i)
   {
     for (int j = 0; j < h; ++j)
     {
-      mI.at<float>(i,j) = (float)mI.at<float>(i,j) / (float)maxVal;
+      maxVal = std::max(maxVal, m.at<float>(i,j));
     }
   }
+
+  return maxVal;
+}
+
+void scale_image(cv::Mat& m, int w, int h, int maxVal)
+{
+  for (int i = 0; i < w; ++i)
+  {
+    for (int j = 0; j < h; ++j)
+    {
+      m.at<float>(i,j) = m.at<float>(i, j) / maxVal;
+    }
+  }
+}
+
+int main()
+{
+  int w = 100;
+  int h = 200;
+  cv::Mat m(w, h, CV_8UC1);
+  cv::Mat mI(w, h, CV_32FC1);
+  cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
+  cv::namedWindow("Integral image", cv::WINDOW_AUTOSIZE);
+
+  randomize_image(m, w, h);
+
+  // method 1: loop over every pixel
+  generate_integral_image(mI, m, w, h);
+  int maxVal = max_val(mI, w, h);
+  scale_image(mI, w, h, maxVal);
 
   while(true)
   {
