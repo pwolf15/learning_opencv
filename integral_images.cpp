@@ -109,10 +109,35 @@ void scale_image(cv::Mat& m, int w, int h, int maxVal)
   }
 }
 
-int sum_pixels(cv::Mat& mI, int r0, int c0, int r1, int c1)
+int sum_pixels1(cv::Mat& mI, int r0, int c0, int r1, int c1)
 {
-  // sum = mI[r1][c1] - mI[r0][c1] - mI[r1][c0] + m1[r0][c0]
-  return 0;
+  // sum = mI[r1][c1] - mI[r0-1][c1] - mI[r1][c0-1] + m1[r0-1][c0-1]
+
+  if (r0 == r1 || c0 == c1)
+  {
+    return 0;
+  }
+
+  float a = mI.at<float>(r1,c1);
+  float b = r0 - 1 >= 0 ? mI.at<float>(r0 - 1,c1) : 0;
+  float c = c0 - 1 >= 0 ? mI.at<float>(r1, c0 - 1) : 0;
+  float d = r0 - 1 >= 0 && c0 - 1 >= 0 ? mI.at<float>(r0-1,c0-1) : 0;
+
+  return a - b - c + d;
+}
+
+int sum_pixels2(cv::Mat& m, int r0, int c0, int r1, int c1)
+{
+  int sum = 0;
+  for (int i = r0; i <= r1; ++i)
+  {
+    for (int j = c0; j <= c1; ++j)
+    {
+      sum += m.at<uchar>(i,j);
+    }
+  }
+
+  return sum;
 }
 
 int main()
@@ -162,6 +187,32 @@ int main()
       assert(mI.at<float>(i, j) == mI2.at<float>(i, j));
     }
   }
+
+  for (int i = 0; i <= 10; ++i)
+  {
+    for (int j = 0; j <= 10; ++j)
+    {
+      std::cout << (int)m.at<uchar>(i,j) << " ";
+    }
+    std::cout << std::endl;
+  }
+
+  std::cout << "Integral" << std::endl;
+  for (int i = 0; i <= 10; ++i)
+  {
+    for (int j = 0; j <= 10; ++j)
+    {
+      std::cout << (int)mI2.at<float>(i,j) << " ";
+    }
+    std::cout << std::endl;
+  }
+
+  std::cout << "Sums" << std::endl;
+  std::cout << sum_pixels1(mI, 4, 4, 10, 10) << std::endl;
+  std::cout << sum_pixels2(m, 4, 4, 10, 10) << std::endl;
+
+  std::cout << sum_pixels1(mI, 1, 2, 31, 31) << std::endl;
+  std::cout << sum_pixels2(m, 1, 2, 31, 31) << std::endl;
 
   int maxVal = max_val(mI, w, h);
   scale_image(mI, w, h, maxVal);
