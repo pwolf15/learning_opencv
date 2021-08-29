@@ -10,3 +10,4 @@ OpenCV
 * saturation casting
 * MatExpr
 * SparseMat
+* Integral images and their uses
