@@ -47,6 +47,25 @@ void generate_integral_image(cv::Mat& mI, cv::Mat m, int w, int h)
   }
 }
 
+void generate_integral_image2(cv::Mat& mI, cv::Mat m, int w, int h)
+{
+  for (int i = 0; i < w; ++i)
+  {
+    for (int j = 0; j < h; ++j)
+    {
+      int pixelValue = 0;
+      for (int k = 0; k < i; ++k)
+      {
+        for (int l = 0; l < j; ++l)
+        {
+          pixelValue += (float)m.at<uchar>(k,l);
+        }
+      }
+      mI.at<float>(i,j) = pixelValue;
+    }
+  }
+}
+
 int max_val(cv::Mat m, int w, int h)
 {
   float maxVal = 0;
@@ -78,8 +97,10 @@ int main()
   int h = 200;
   cv::Mat m(w, h, CV_8UC1);
   cv::Mat mI(w, h, CV_32FC1);
+  cv::Mat mI2(w, h, CV_32FC1);
   cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
   cv::namedWindow("Integral image", cv::WINDOW_AUTOSIZE);
+  cv::namedWindow("Integral image2", cv::WINDOW_AUTOSIZE);
 
   randomize_image(m, w, h);
 
@@ -88,10 +109,16 @@ int main()
   int maxVal = max_val(mI, w, h);
   scale_image(mI, w, h, maxVal);
 
+  // method 2: efficient a (left) + b (top) - c (top left for double count)
+  generate_integral_image2(mI2, m, w, h);
+  maxVal = max_val(mI2, w, h);
+  scale_image(mI2, w, h, maxVal);
+
   while(true)
   {
     cv::imshow("Image", m);
     cv::imshow("Integral image", mI);
+    cv::imshow("Integral image2", mI2);
 
     char c = (char)cv::waitKey(10);
     if (c == KeyCodes::ESCAPE)
