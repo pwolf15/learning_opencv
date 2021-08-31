@@ -1,5 +1,6 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 
 #include <chrono>
 #include <iostream>
@@ -218,6 +219,20 @@ int main()
   scale_image(mI, w, h, maxVal);
   maxVal = max_val(mI2, w, h);
   scale_image(mI2, w, h, maxVal);
+
+  cv::Mat mI3;
+  cv::integral(m, mI3);
+
+  std::cout << "w: " << mI3.cols << std::endl;
+  std::cout << "h: " << mI3.rows << std::endl;
+
+  bool eq = std::equal(mI.begin<uchar>(), mI.end<uchar>(), mI2.begin<uchar>());
+
+  assert(eq);
+
+  eq = std::equal(mI2.begin<uchar>(), mI2.end<uchar>(), mI3.begin<uchar>());
+
+  assert(eq);
 
   while (true)
   {
