@@ -12,3 +12,4 @@ OpenCV
 * SparseMat
 * Integral images and their uses: https://docs.opencv.org/3.4/d7/d1b/group__imgproc__misc.html
 * https://www.mathworks.com/help/images/ref/integralimage.html
+* Haar wavelet transform
