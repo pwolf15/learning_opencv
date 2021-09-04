@@ -122,9 +122,9 @@ int sum_pixels1(cv::Mat& mI, int r0, int c0, int r1, int c1)
     return 0;
   }
 
-  float a = mI.at<float>(r1,c1);
-  float b = mI.at<float>(r0,c1);
-  float c = mI.at<float>(r1,c0);
+  float a = mI.at<float>(r1+1,c1+1);
+  float b = mI.at<float>(r0,c1+1);
+  float c = mI.at<float>(r1+1,c0);
   float d = mI.at<float>(r0,c0);
 
   return a - b - c + d;
@@ -212,40 +212,40 @@ int main()
     std::cout << std::endl;
   }
 
-  // std::cout << "Sums" << std::endl;
-  // std::cout << sum_pixels1(mI, 4, 4, 10, 10) << std::endl;
-  // std::cout << sum_pixels2(m, 4, 4, 10, 10) << std::endl;
+  std::cout << "Sums" << std::endl;
+  std::cout << sum_pixels1(mI, 0, 0, 1,1) << std::endl;
+  std::cout << sum_pixels2(m, 0, 0, 1,1) << std::endl;
+  std::cout << sum_pixels1(mI, 4, 4, 10, 10) << std::endl;
+  std::cout << sum_pixels2(m, 4, 4, 10, 10) << std::endl;
 
-  // std::cout << sum_pixels1(mI, 1, 2, 31, 31) << std::endl;
-  // std::cout << sum_pixels2(m, 1, 2, 31, 31) << std::endl;
+  std::cout << sum_pixels1(mI, 1, 2, 31, 31) << std::endl;
+  std::cout << sum_pixels2(m, 1, 2, 31, 31) << std::endl;
 
-  // cv::Mat mI3;
-  // cv::integral(m, mI3);
+  cv::Mat mI3;
+  cv::integral(m, mI3);
 
-  // std::cout << "w: " << mI3.cols << std::endl;
-  // std::cout << "h: " << mI3.rows << std::endl;
+  std::cout << "w: " << mI3.cols << std::endl;
+  std::cout << "h: " << mI3.rows << std::endl;
 
-  // bool eq = std::equal(mI.begin<uchar>(), mI.end<uchar>(), mI2.begin<uchar>());
+  bool eq = std::equal(mI.begin<uchar>(), mI.end<uchar>(), mI2.begin<uchar>());
 
-  // assert(eq);
+  assert(eq);
 
-  // // compare against OpenCV generated integral image(mI3)
-  // // get type of mI3, type is int
-  // MatType(mI3);
+  // compare against OpenCV generated integral image(mI3)
+  // get type of mI3, type is int
+  MatType(mI3);
 
-  // assert(mI3.rows == mI2.rows);
-  // assert(mI3.cols == mI2.cols);
+  assert(mI3.rows == mI2.rows);
+  assert(mI3.cols == mI2.cols);
 
-  // for (int i = 0; i < 5; ++i)
-  // {
-  //   for (int j = 0; j < 5; ++j)
-  //   {
-  //     std::cout << mI2.at<float>(i,j) << " ";
-  //   }
-  //   std::cout << std::endl;
-  // }
-
-  // assert(std::equal(mI2.begin<uchar>(), mI2.end<uchar>(), mI3.begin<uchar>()));
+  for (int i = 0; i < mI3.rows; ++i)
+  {
+    for (int j = 0; j < mI3.cols; ++j)
+    {
+      // CV integral image is int32, our integral image is float
+      assert(std::abs(float(mI3.at<int>(i,j) - mI2.at<int>(i,j)) < 0.1));
+    }
+  }
 
   // scale images for floating point display
   int maxVal = max_val(mI, w+1, h+1);
