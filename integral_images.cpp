@@ -5,6 +5,29 @@
 #include <chrono>
 #include <iostream>
 
+void MatType( cv::Mat inputMat )
+{
+    int inttype = inputMat.type();
+
+    std::string r, a;
+    uchar depth = inttype & CV_MAT_DEPTH_MASK;
+    uchar chans = 1 + (inttype >> CV_CN_SHIFT);
+    switch ( depth ) {
+        case CV_8U:  r = "8U";   a = "Mat.at<uchar>(y,x)"; break;  
+        case CV_8S:  r = "8S";   a = "Mat.at<schar>(y,x)"; break;  
+        case CV_16U: r = "16U";  a = "Mat.at<ushort>(y,x)"; break; 
+        case CV_16S: r = "16S";  a = "Mat.at<short>(y,x)"; break; 
+        case CV_32S: r = "32S";  a = "Mat.at<int>(y,x)"; break; 
+        case CV_32F: r = "32F";  a = "Mat.at<float>(y,x)"; break; 
+        case CV_64F: r = "64F";  a = "Mat.at<double>(y,x)"; break; 
+        default:     r = "User"; a = "Mat.at<UKNOWN>(y,x)"; break; 
+    }   
+    r += "C";
+    r += (chans+'0');
+    std::cout << "Mat is of type " << r << " and should be accessed with " << a << std::endl;
+    
+}
+
 enum KeyCodes
 {
   BACKSPACE = 8,
@@ -44,7 +67,7 @@ void generate_integral_image(cv::Mat& mI, cv::Mat m, int w, int h)
           pixelValue += (float)m.at<uchar>(k, l);
         }
       }
-      mI.at<float>(i, j) = pixelValue;
+      mI.at<float>(i+1, j+1) = pixelValue;
     }
   }
 }
@@ -56,31 +79,11 @@ void generate_integral_image2(cv::Mat& mI, cv::Mat m, int w, int h)
     for (int j = 0; j < w; ++j)
     {
       int pixelValue = 0;
-      if (i == 0)
-      {
-        if (j != 0)
-        {
-          // add left pixel
-          pixelValue += mI.at<float>(i, j - 1);
-        }
-      }
-      else if (j == 0)
-      {
-        if (i != 0)
-        {
-          // add top pixel
-          pixelValue += mI.at<float>(i - 1, j);
-        }
-      }
-      else
-      {
-        pixelValue += mI.at<float>(i, j - 1);
-        pixelValue += mI.at<float>(i - 1, j);
-        pixelValue -= mI.at<float>(i - 1, j - 1);
-      }
-
+      pixelValue += mI.at<float>(i+1, j);
+      pixelValue += mI.at<float>(i, j+1);
+      pixelValue -= mI.at<float>(i, j);
       pixelValue += (float)m.at<uchar>(i, j);
-      mI.at<float>(i, j) = pixelValue;
+      mI.at<float>(i+1, j+1) = pixelValue;
     }
   }
 }
@@ -120,9 +123,9 @@ int sum_pixels1(cv::Mat& mI, int r0, int c0, int r1, int c1)
   }
 
   float a = mI.at<float>(r1,c1);
-  float b = r0 - 1 >= 0 ? mI.at<float>(r0 - 1,c1) : 0;
-  float c = c0 - 1 >= 0 ? mI.at<float>(r1, c0 - 1) : 0;
-  float d = r0 - 1 >= 0 && c0 - 1 >= 0 ? mI.at<float>(r0-1,c0-1) : 0;
+  float b = mI.at<float>(r0,c1);
+  float c = mI.at<float>(r1,c0);
+  float d = mI.at<float>(r0,c0);
 
   return a - b - c + d;
 }
@@ -146,8 +149,9 @@ int main()
   int w = 200;
   int h = 100;
   cv::Mat m(h, w, CV_8UC1);
-  cv::Mat mI(h, w, CV_32FC1);
-  cv::Mat mI2(h, w, CV_32FC1);
+  cv::Mat mI(h+1, w+1, CV_32FC1); // integral image uses row / column of padding
+  cv::Mat mI2(h+1, w+1, CV_32FC1);
+
   cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
   cv::namedWindow("Integral image", cv::WINDOW_AUTOSIZE);
   cv::namedWindow("Integral image2", cv::WINDOW_AUTOSIZE);
@@ -158,7 +162,7 @@ int main()
 
   auto start = std::chrono::steady_clock::now();
 
-  generate_integral_image(mI, m, w, h);
+  generate_integral_image(mI, m, w, h); // integral image has row and column of padding
 
   auto finish = std::chrono::steady_clock::now();
   double elapsed_seconds =
@@ -208,31 +212,46 @@ int main()
     std::cout << std::endl;
   }
 
-  std::cout << "Sums" << std::endl;
-  std::cout << sum_pixels1(mI, 4, 4, 10, 10) << std::endl;
-  std::cout << sum_pixels2(m, 4, 4, 10, 10) << std::endl;
+  // std::cout << "Sums" << std::endl;
+  // std::cout << sum_pixels1(mI, 4, 4, 10, 10) << std::endl;
+  // std::cout << sum_pixels2(m, 4, 4, 10, 10) << std::endl;
 
-  std::cout << sum_pixels1(mI, 1, 2, 31, 31) << std::endl;
-  std::cout << sum_pixels2(m, 1, 2, 31, 31) << std::endl;
+  // std::cout << sum_pixels1(mI, 1, 2, 31, 31) << std::endl;
+  // std::cout << sum_pixels2(m, 1, 2, 31, 31) << std::endl;
 
-  int maxVal = max_val(mI, w, h);
-  scale_image(mI, w, h, maxVal);
-  maxVal = max_val(mI2, w, h);
-  scale_image(mI2, w, h, maxVal);
+  // cv::Mat mI3;
+  // cv::integral(m, mI3);
 
-  cv::Mat mI3;
-  cv::integral(m, mI3);
+  // std::cout << "w: " << mI3.cols << std::endl;
+  // std::cout << "h: " << mI3.rows << std::endl;
 
-  std::cout << "w: " << mI3.cols << std::endl;
-  std::cout << "h: " << mI3.rows << std::endl;
+  // bool eq = std::equal(mI.begin<uchar>(), mI.end<uchar>(), mI2.begin<uchar>());
 
-  bool eq = std::equal(mI.begin<uchar>(), mI.end<uchar>(), mI2.begin<uchar>());
+  // assert(eq);
 
-  assert(eq);
+  // // compare against OpenCV generated integral image(mI3)
+  // // get type of mI3, type is int
+  // MatType(mI3);
 
-  eq = std::equal(mI2.begin<uchar>(), mI2.end<uchar>(), mI3.begin<uchar>());
+  // assert(mI3.rows == mI2.rows);
+  // assert(mI3.cols == mI2.cols);
 
-  assert(eq);
+  // for (int i = 0; i < 5; ++i)
+  // {
+  //   for (int j = 0; j < 5; ++j)
+  //   {
+  //     std::cout << mI2.at<float>(i,j) << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+
+  // assert(std::equal(mI2.begin<uchar>(), mI2.end<uchar>(), mI3.begin<uchar>()));
+
+  // scale images for floating point display
+  int maxVal = max_val(mI, w+1, h+1);
+  scale_image(mI, w+1, h+1, maxVal);
+  maxVal = max_val(mI2, w+1, h+1);
+  scale_image(mI2, w+1, h+1, maxVal);
 
   while (true)
   {
