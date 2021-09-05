@@ -88,6 +88,33 @@ void generate_integral_image2(cv::Mat& mI, cv::Mat m, int w, int h)
   }
 }
 
+void rotated_integral_image1(cv::Mat& mI, cv::Mat m, int w, int h)
+{
+  for (int i = 0; i < h; ++i)
+  {
+    for (int j = 0; j < w; ++j)
+    {
+      int pixelValue = 0;
+
+      int k = i - 1;
+      int l = 3;
+      while (k >= 0)
+      {
+        for (int g = j - (l / 2); g <= j + (l / 2); ++g)
+        {
+          // std::cout << k << ", " << g << std::endl;
+          pixelValue += m.at<uchar>(k,g);
+        }
+        --k;
+        l += 2;
+      }
+
+      pixelValue += m.at<uchar>(i,j);
+      mI.at<float>(i+1, j+1) = pixelValue;
+    }
+  }
+}
+
 int max_val(cv::Mat m, int w, int h)
 {
   float maxVal = 0;
@@ -253,11 +280,18 @@ int main()
   maxVal = max_val(mI2, w+1, h+1);
   scale_image(mI2, w+1, h+1, maxVal);
 
+  cv::Mat mI4(h+1, w+1, CV_32FC1);
+  mI4 = cv::Mat::zeros(h+1, w+1, CV_32FC1);
+  rotated_integral_image1(mI4, m, w, h);
+  maxVal = max_val(mI4, w+1, h+1);
+  scale_image(mI4, w+1, h+1, maxVal);
+
   while (true)
   {
     cv::imshow("Image", m);
     cv::imshow("Integral image", mI);
     cv::imshow("Integral image2", mI2);
+    cv::imshow("Rotated Integral image1", mI4);
 
     char c = (char)cv::waitKey(10);
     if (c == KeyCodes::ESCAPE)
