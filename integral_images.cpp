@@ -102,6 +102,7 @@ void rotated_integral_image1(cv::Mat& mI, cv::Mat m, int w, int h)
       {
         for (int g = j - (l / 2); g <= j + (l / 2); ++g)
         {
+          if (g < 0 || g > w) continue;
           // std::cout << k << ", " << g << std::endl;
           pixelValue += m.at<uchar>(k,g);
         }
@@ -111,6 +112,51 @@ void rotated_integral_image1(cv::Mat& mI, cv::Mat m, int w, int h)
 
       pixelValue += m.at<uchar>(i,j);
       mI.at<float>(i+1, j+1) = pixelValue;
+    }
+  }
+}
+
+void rotated_integral_image2(cv::Mat& mI, cv::Mat m, int w, int h)
+{
+  for (int i = 0; i < h; ++i)
+  {
+    for (int j = 0; j < w; ++j)
+    {
+      // add left, right, subtract top
+      int pixelValue = 0;
+
+
+      if (i && j == 0)
+      {
+        mI.at<float>(i, j) = mI.at<float>(i-1, j+1);
+      }
+      
+      int a = mI.at<float>(i,j);
+      int b = mI.at<float>(i,j+2);
+    
+      int c = 0; 
+      int d = m.at<uchar>(i,j);
+      int e = 0;
+      
+
+      if (i)
+      {
+        e = m.at<uchar>(i-1,j);
+        c = mI.at<float>(i-1,j+1);
+      }
+      if (i == 2 && j == 0)
+      {
+
+        
+        std::cout << "a: " << a << std::endl;
+        std::cout << "b: " << b << std::endl;
+        std::cout << "c: " << c << std::endl;
+        std::cout << "d: " << d << std::endl;
+        std::cout << "e: " << e << std::endl;
+        std::cout << "total: " << (a + b + d + e - c) << std::endl;
+      }
+      
+      mI.at<float>(i+1, j+1) = a + b + d + e - c;
     }
   }
 }
@@ -182,6 +228,7 @@ int main()
   cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
   cv::namedWindow("Integral image", cv::WINDOW_AUTOSIZE);
   cv::namedWindow("Integral image2", cv::WINDOW_AUTOSIZE);
+  cv::namedWindow("Rotated Integral image2", cv::WINDOW_AUTOSIZE);
 
   randomize_image(m, w, h);
 
@@ -283,8 +330,28 @@ int main()
   cv::Mat mI4(h+1, w+1, CV_32FC1);
   mI4 = cv::Mat::zeros(h+1, w+1, CV_32FC1);
   rotated_integral_image1(mI4, m, w, h);
+  cv::Mat mI5(h+1, w+1, CV_32FC1);
+  mI5 = cv::Mat::zeros(h+1, w+1, CV_32FC1);
+  rotated_integral_image2(mI5, m, w, h);
+  cv::Mat sum,sqsum,tilt;
+  cv::integral(m,sum,sqsum,tilt);
+  // maxVal = max_val(mI5, w+1, h+1);
+  // scale_image(mI5, w+1, h+1, maxVal);
+
+  for (int i = 0; i <= 5; ++i)
+  {
+    for (int j = 0; j <= 5; ++j)
+    {
+      std::cout << mI5.at<float>(i,j) << "," << mI4.at<float>(i,j) << "," << tilt.at<int>(i,j) << " ";
+    }
+
+    std::cout << std::endl;
+  }
+
   maxVal = max_val(mI4, w+1, h+1);
   scale_image(mI4, w+1, h+1, maxVal);
+  maxVal = max_val(mI5, w+1, h+1);
+  scale_image(mI5, w+1, h+1, maxVal);
 
   while (true)
   {
@@ -292,6 +359,7 @@ int main()
     cv::imshow("Integral image", mI);
     cv::imshow("Integral image2", mI2);
     cv::imshow("Rotated Integral image1", mI4);
+    cv::imshow("Rotated Integral image2", mI5);
 
     char c = (char)cv::waitKey(10);
     if (c == KeyCodes::ESCAPE)

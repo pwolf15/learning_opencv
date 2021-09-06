@@ -18,3 +18,5 @@ OpenCV
 [1] Viola, P., and M. J. Jones. "Rapid Object Detection using a Boosted Cascade of Simple Features". Proceedings of the 2001 IEEE Computer Society Conference on Computer Vision and Pattern Recognition. 2001. Vol. 1, pp. 511–518.
 
 [2] Lienhart, R., and J. Maydt. "An Extended Set of Haar-like Features for Rapid Object Detection". Proceedings of the 2002 IEEE International Conference on Image Processing. Sept. 2002. Vol. 1, pp. 900–903.
+
+https://levelup.gitconnected.com/the-integral-image-4df3df5dce35
