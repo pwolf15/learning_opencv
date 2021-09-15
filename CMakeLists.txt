@@ -58,3 +58,6 @@ target_link_libraries(typewriter ${OpenCV_LIBS})
 
 add_executable(integral_images integral_images.cpp)
 target_link_libraries(integral_images ${OpenCV_LIBS})
+
+add_executable(alpha_blending alpha_blending.cpp)
+target_link_libraries(alpha_blending ${OpenCV_LIBS})
