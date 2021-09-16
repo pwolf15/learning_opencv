@@ -20,3 +20,8 @@ OpenCV
 [2] Lienhart, R., and J. Maydt. "An Extended Set of Haar-like Features for Rapid Object Detection". Proceedings of the 2002 IEEE International Conference on Image Processing. Sept. 2002. Vol. 1, pp. 900–903.
 
 https://levelup.gitconnected.com/the-integral-image-4df3df5dce35
+
+* Covariance matrix (calcCovarMatrix)
+* scrambled covariance
+* PCA for very large vectors: eigenfaces technique for face recognition
+* https://learnopencv.com/eigenface-using-opencv-c-python/
