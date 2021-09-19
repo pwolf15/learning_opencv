@@ -25,3 +25,4 @@ https://levelup.gitconnected.com/the-integral-image-4df3df5dce35
 * scrambled covariance
 * PCA for very large vectors: eigenfaces technique for face recognition
 * https://learnopencv.com/eigenface-using-opencv-c-python/
+* invert using Guassian elimination / LU decomposition, singular value decomposition, or cholesky decomposition
