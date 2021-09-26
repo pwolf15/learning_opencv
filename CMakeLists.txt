@@ -61,3 +61,5 @@ target_link_libraries(integral_images ${OpenCV_LIBS})
 
 add_executable(alpha_blending alpha_blending.cpp)
 target_link_libraries(alpha_blending ${OpenCV_LIBS})
+
+add_subdirectory(ch05)
