@@ -12,3 +12,6 @@ target_link_libraries(rectangle_ptr ${OpenCV_LIBS})
 add_executable(pyramid pyramid.cpp)
 target_link_libraries(pyramid ${OpenCV_LIBS})
 
+add_executable(inverted_headers inverted_headers.cpp)
+target_link_libraries(inverted_headers ${OpenCV_LIBS})
+
