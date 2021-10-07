@@ -15,3 +15,5 @@ target_link_libraries(pyramid ${OpenCV_LIBS})
 add_executable(inverted_headers inverted_headers.cpp)
 target_link_libraries(inverted_headers ${OpenCV_LIBS})
 
+add_executable(compare compare.cpp)
+target_link_libraries(compare ${OpenCV_LIBS})
