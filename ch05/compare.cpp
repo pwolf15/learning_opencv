@@ -6,7 +6,7 @@ int main(int argc, char** argv)
   cv::namedWindow("green", cv::WINDOW_AUTOSIZE);
   cv::namedWindow("green_compare", cv::WINDOW_AUTOSIZE);
 
-  cv::Mat img = cv::imread("/home/pwolf/Downloads/akri_streaming_demo.png");
+  cv::Mat img = cv::imread("/home/pwolf/Downloads/garden.jpeg");
   cv::Mat rgb_channel[3];
   cv::split(img, rgb_channel);
   if (img.empty())
@@ -24,7 +24,7 @@ int main(int argc, char** argv)
   std::cout << "Min: " << minIdx << ", minvalue: " << min << std::endl;
   std::cout << "Max: " << maxIdx << ", maxValue: " << max << std::endl;
 
-  double thresh = (max - min) / 2.0;
+  unsigned char thresh = (unsigned char)((max - min) / 2.0);
   clone1.setTo(thresh);
   clone2.setTo(0);
 
