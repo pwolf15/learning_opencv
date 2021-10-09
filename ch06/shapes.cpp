@@ -9,6 +9,22 @@ int main(int argc, char** argv)
   if (img.empty())
     return -1;
 
+  // circle
+  cv::circle(img, cv::Point(30,30), 10, cv::Scalar(255,100,100), 5);
+
+  // ellipse
+  cv::ellipse(img, cv::Point(50,50), cv::Size(100, 100), 360, 0, 360, cv::Scalar(0, 0, 0),2);
+
+  // fillConvexPoly
+
+  // fillPoly
+
+  // line
+
+  // rectangle
+
+  // polyLines
+
   cv::imshow("shapes", img);
 
   cv::waitKey(0);
