@@ -16,6 +16,8 @@ int main(int argc, char** argv)
   cv::ellipse(img, cv::Point(50,50), cv::Size(100, 100), 360, 0, 360, cv::Scalar(0, 0, 0),2);
 
   // fillConvexPoly
+  cv::Point points[4] = { cv::Point(10,10), cv::Point(50,10), cv::Point(50, 10), cv::Point(50,50) };
+  cv::fillConvexPoly(img, points, 4, cv::Scalar(255, 255, 255));
 
   // fillPoly
 
