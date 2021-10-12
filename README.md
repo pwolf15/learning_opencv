@@ -27,4 +27,19 @@ https://levelup.gitconnected.com/the-integral-image-4df3df5dce35
 * https://learnopencv.com/eigenface-using-opencv-c-python/
 * invert using Guassian elimination / LU decomposition, singular value decomposition, or cholesky decomposition
 
+## Functors
 
+* function objects / functors
+* Principal Component Analysis (cv::PCA)
+* Analyzing a distribution in many dimensions, and extracting from that distribution the particular
+subset of dimensions that carry the most information.
+* Ability to generate a new basis whose axes can be ordered by their importance
+* eigenvectors of the covariance matrix
+* PCA object can compute and retain basis
+* In modern CV, machine learning is intrinsic to an evergrowing list of algorithms.
+* PCA and SVD considered building blocks
+* Karhunen-Loeve Transform (KLT)
+* RNG => multiple streams of pseudorandom numbers, one instance of cv::RNG for each thread in execution
+* Multiply with carry (MWC) 
+* Ziggurat algorithm
+* singularity threshold
