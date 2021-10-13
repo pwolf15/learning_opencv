@@ -5,14 +5,15 @@
 
 int main(int argc, char** argv)
 {
-  cv::Mat m(3,1, CV_32F);
-  cv::RNG rng(0);
-  rng.fill(m, cv::RNG::UNIFORM, 0.0, 1.0);
+  cv::RNG rng = cv::theRNG();
 
-  for (int i = 0; i < m.rows; ++i)
+  // three fp numbers from 0.0 to 1.0 (uniform)
+  for (int i = 0; i < 3; ++i)
   {
-    std::cout << m.at<float>(i,0) << std::endl;
+    std::cout << (float)rng << std::endl;
   }
+
+  // three dp centered at 0.0 (gaussian)
 
   // RNG arrays
 
