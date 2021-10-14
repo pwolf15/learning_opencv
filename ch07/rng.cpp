@@ -8,12 +8,25 @@ int main(int argc, char** argv)
   cv::RNG rng = cv::theRNG();
 
   // three fp numbers from 0.0 to 1.0 (uniform)
-  for (int i = 0; i < 3; ++i)
+  std::cout << "Numbers from 0.0 to 1.0 (uniform)" << std::endl;
+  for (size_t i = 0; i < 3; ++i)
   {
     std::cout << (float)rng << std::endl;
   }
 
   // three dp centered at 0.0 (gaussian)
+  std::cout << "Numbers from -1.0 to 1.0 (gaussian)" << std::endl;
+  for (size_t i = 0; i < 3; ++i)
+  {
+    std::cout << rng.gaussian(1) << std::endl;
+  }
+
+  // three unsigned bytes from 0 to 255 (uniform)
+  std::cout << "Numbers from 0 to 255 (uniform)" << std::endl;
+  for (size_t i = 0; i < 3; ++i)
+  {
+    std::cout << (int)((uint8_t)rng.uniform(0,255)) << std::endl;
+  }
 
   // RNG arrays
 
