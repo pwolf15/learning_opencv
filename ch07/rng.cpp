@@ -69,5 +69,13 @@ int main(int argc, char** argv)
     std::cout << "b: " << (int)color[2] << "\n";
   }
 
+  // 100 three-byte objects
+  // cv::Mat m5(100,1,CV_8UC3);
+  // rng.fill(m5, cv::RNG::UNIFORM, cv::Vec3f()
+
+  // SVD
+  cv::Mat m6 = (cv::Mat_<double>(3,2) << 1,1,0,1,-1,1);
+  std::cout << m6 << std::endl;
+
   return 0;
 }
