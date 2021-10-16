@@ -74,8 +74,17 @@ int main(int argc, char** argv)
   // rng.fill(m5, cv::RNG::UNIFORM, cv::Vec3f()
 
   // SVD
-  cv::Mat m6 = (cv::Mat_<double>(3,2) << 1,1,0,1,-1,1);
-  std::cout << m6 << std::endl;
+  cv::Mat A = (cv::Mat_<double>(3,2) << 1,1,0,1,-1,1);
+  cv::Mat A_T;
+  cv::transpose(A, A_T);
+  std::cout << A << std::endl;
+
+  cv::Mat result = A * A_T;
+  cv::Mat eigenValues, eigenVectors;
+  cv::eigen(result,eigenValues,eigenVectors);
+  std::cout << result << std::endl;
+  std::cout << eigenValues << std::endl;    // 0,2,3
+  std::cout << eigenVectors << std::endl;   // 
 
   return 0;
 }
