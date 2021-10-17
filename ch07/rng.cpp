@@ -84,13 +84,29 @@ int main(int argc, char** argv)
   cv::eigenNonSymmetric(result,eigenValues,eigenVectors);
   std::cout << result << std::endl;
   std::cout << eigenValues << std::endl;    // 0,2,3
+
+  // e1 = 0, v1 = (1,-2,1), s1 = 0
+  // e2 = 2, v2 = (-1,0,1), s2 = sqrt(2)
+  // e3 = 3, v3 = (1,1,1), s3 = sqrt(3)
   std::cout << eigenVectors << std::endl;   // normalized eigenvectors
+
+  // V = [v1,v2,v3]
+  // V = 
+  //  [ 1 -2  1 ]
+  //  [-1  0  1 ]
+  //  [ 1  1  1 ]
+
+  // U = [u1,u2,u3], u1 = (1 / s1)Av1
+  // U = 
+  //   [ sqrt(3) / 3  sqrt(2) / 2   ]
+  //   [ sqrt(3) / 3  0             ]
+  //   [ sqrt(3) /3   -sqrtt(2) / 2 ]
 
   cv::Mat W,U,Vt;
   cv::SVD::compute(A, W, U, Vt);
-  std::cout << W << std::endl;
-  std::cout << U << std::endl;
-  std::cout << Vt << std::endl;
+  std::cout << W << std::endl;  // singular values
+  std::cout << U << std::endl;  // left singular vectors
+  std::cout << Vt << std::endl; // transposed matrix of right singular vectors
 
   return 0;
 }
