@@ -81,10 +81,16 @@ int main(int argc, char** argv)
 
   cv::Mat result = A * A_T;
   cv::Mat eigenValues, eigenVectors;
-  cv::eigen(result,eigenValues,eigenVectors);
+  cv::eigenNonSymmetric(result,eigenValues,eigenVectors);
   std::cout << result << std::endl;
   std::cout << eigenValues << std::endl;    // 0,2,3
-  std::cout << eigenVectors << std::endl;   // 
+  std::cout << eigenVectors << std::endl;   // normalized eigenvectors
+
+  cv::Mat W,U,Vt;
+  cv::SVD::compute(A, W, U, Vt);
+  std::cout << W << std::endl;
+  std::cout << U << std::endl;
+  std::cout << Vt << std::endl;
 
   return 0;
 }
