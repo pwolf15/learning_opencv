@@ -43,3 +43,14 @@ subset of dimensions that carry the most information.
 * Multiply with carry (MWC) 
 * Ziggurat algorithm
 * singularity threshold
+
+# Filters and Convolution
+
+* image processing: using higher-level operators that are defined on image structures in order to accomplish tasks whose meaning is naturally defined in the context of graphical, visual images.
+* filter: any algorithm that starts with some image, and computes a new image by computing for each pixel location some function of the pixels in I that are in some small area around that same x,y location. filter/kernel defines that area's shape and how elements of the small area are combined
+* linear kernels: weighted sum of points around x,y in I
+* median = nonlinear
+* filter generally equals kernel; mathematicians tend to like kernel
+* kernel support: size of array 
+* linear kernel => convolution; sometimes used to refer any filter, even nonlinear
+* anchor point: how kernel is aligned to input image
