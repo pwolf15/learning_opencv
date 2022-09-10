@@ -6,6 +6,7 @@ int main()
   cv::namedWindow("USB capture", cv::WINDOW_AUTOSIZE);
   cv::namedWindow("Grayscale", cv::WINDOW_AUTOSIZE);
   cv::namedWindow("Canny", cv::WINDOW_AUTOSIZE);
+  cv::namedWindow("Combo", cv::WINDOW_AUTOSIZE);
 
   cv::VideoCapture cap;
 
@@ -25,12 +26,27 @@ int main()
 	  if (frame.empty())
 		  break;
 
-	  cv::cvtColor(frame, img_gray, cv::COLOR_BGR2GRAY);
+	  cv::Mat combo = cv::Mat::zeros(frame.rows, frame.cols*3, CV_8UC3);
+	  
+    cv::cvtColor(frame, img_gray, cv::COLOR_BGR2GRAY);
 	  cv::Canny(img_gray, img_cny, 10, 100, 3, true);
+
+    cv::Mat m1 = combo(cv::Range(0, frame.rows), cv::Range(0, frame.cols));
+    cv::Mat m2 = combo(cv::Range(0, frame.rows), cv::Range(frame.cols, frame.cols*2));
+    cv::Mat m3 = combo(cv::Range(0, frame.rows), cv::Range(frame.cols*2, frame.cols*3));
 
 	  cv::imshow("USB capture", frame);
 	  cv::imshow("Grayscale", img_gray);
 	  cv::imshow("Canny", img_cny);
+
+    cv::cvtColor(img_gray, img_gray, cv::COLOR_GRAY2BGR);
+    cv::cvtColor(img_cny, img_cny, cv::COLOR_GRAY2BGR);
+
+    frame.copyTo(m1);
+    img_gray.copyTo(m2);
+    img_cny.copyTo(m3);
+
+	  cv::imshow("Combo", combo);
 
 	  char c = (char) cv::waitKey(25);
           if (c == 27)
