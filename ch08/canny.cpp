@@ -46,6 +46,11 @@ int main()
     img_gray.copyTo(m2);
     img_cny.copyTo(m3);
 
+    // labels
+    cv::putText(m1, "Original", cv::Point(15, 15), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(255, 255, 255));
+    cv::putText(m2, "Grayscale", cv::Point(15, 15), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(255, 255, 255));
+    cv::putText(m3, "Canny", cv::Point(15, 15), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(255, 255, 255));
+    
 	  cv::imshow("Combo", combo);
 
 	  char c = (char) cv::waitKey(25);
