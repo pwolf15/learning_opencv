@@ -6,3 +6,7 @@ find_package(OpenCV)
 
 add_executable(canny canny.cpp)
 target_link_libraries(canny ${OpenCV_LIBS})
+
+add_executable(show_pixel show_pixel.cpp)
+target_link_libraries(show_pixel ${OpenCV_LIBS})
+
