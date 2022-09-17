@@ -35,15 +35,17 @@ void my_mouse_callback(int event, int x, int y, int flags, void* param)
   switch (event)
   {
     case cv::EVENT_LBUTTONDOWN: {
+      
       original.copyTo(image);
-      std::cout << "Here!" << std::endl;
-      std::cout << x << "," << y << std::endl;
 
       // get color at point
-      cv::Vec3b color = image.at<cv::Vec3b>(x, y);
+      cv::Vec3b color = image.at<cv::Vec3b>(y, x);
 
-      std::string col = "R: " + std::to_string(color[0]) + " G: " + std::to_string(color[1]) + " B: " + std::to_string(color[2]);
-      cv::putText(image, col, cv::Point(x, y), cv::FONT_HERSHEY_PLAIN, 1,
+      std::string col = "R: " + std::to_string(color[2]) + " G: " + std::to_string(color[1]) + " B: " + std::to_string(color[0]);
+      int baseline=0;
+      cv::Size sz = cv::getTextSize(col, cv::FONT_HERSHEY_PLAIN, 0.5, 1, &baseline);
+      cv::rectangle(image, cv::Point(x-5, y-10), cv::Point(x+sz.width,y+sz.height), cv::Scalar(0,0,0), -1);
+      cv::putText(image, col, cv::Point(x, y), cv::FONT_HERSHEY_PLAIN, 0.5,
                 cv::Scalar(255, 255, 255));
     }
     break;
