@@ -8,15 +8,42 @@ cv::Mat histImg;
 int x_1 = 0;
 int y_1 = 0;
 
-void draw_hist()
+std::vector<int> bin_pixels(cv::Mat img, int x_1, int y_1, int x_2, int y_2)
+{
+  std::vector<int> bins(8, 0);
+  for (int y = y_1; y <= y_2; ++y)
+  {
+    for (int x = x_1; x <= x_2; ++x)
+    {
+      uint8_t intensity = img.at<uchar>(y, x);
+      const int binSize = 255 / 8;
+      bins[intensity / binSize]++;
+    }
+  }
+  return bins;
+}
+
+
+void draw_hist(cv::Mat img, int x_1, int y_1, int x_2, int y_2)
 {
   cv::Mat r = histImg(cv::Range(0, 100), cv::Range(0, 400));
   cv::Mat g = histImg(cv::Range(100, 200), cv::Range(0, 400));
   cv::Mat b = histImg(cv::Range(200, 300), cv::Range(0, 400));
 
-  cv::rectangle(r, cv::Point(0, 0), cv::Point(r.cols, r.rows), cv::Scalar(0, 0, 255), -1);
-  cv::rectangle(g, cv::Point(0, 0), cv::Point(r.cols, r.rows), cv::Scalar(0, 255, 0), -1);
-  cv::rectangle(b, cv::Point(0, 0), cv::Point(r.cols, r.rows), cv::Scalar(255, 0, 0), -1);
+  cv::Mat rgb_channel[3];
+  cv::split(img, rgb_channel);
+  std::vector<int> rBins = bin_pixels(rgb_channel[2], x_1, y_1, x_2, y_2);
+  std::vector<int> gBins = bin_pixels(rgb_channel[1], x_1, y_1, x_2, y_2);
+  std::vector<int> bBins = bin_pixels(rgb_channel[0], x_1, y_2, x_2, y_2);
+
+  for (auto bin: rBins)
+  {
+    std::cout << bin << std::endl;
+  }
+
+  // cv::rectangle(r, cv::Point(0, 0), cv::Point(r.cols, r.rows), cv::Scalar(0, 0, 255), -1);
+  // cv::rectangle(g, cv::Point(0, 0), cv::Point(r.cols, r.rows), cv::Scalar(0, 255, 0), -1);
+  // cv::rectangle(b, cv::Point(0, 0), cv::Point(r.cols, r.rows), cv::Scalar(255, 0, 0), -1);
 }
 
 int main(int argc, char** argv)
@@ -85,7 +112,7 @@ void my_mouse_callback(int event, int x, int y, int flags, void* param)
       cv::Mat color(roi.size(), CV_8UC3, cv::Scalar(0, 0, 0));
       cv::addWeighted(color, alpha, roi, 1.0 - alpha, 0.0, roi);
 
-      draw_hist();
+      draw_hist(original, x_1, y_1, x_2, y_2);
     }
 
     default:
