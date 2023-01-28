@@ -164,10 +164,10 @@ void drawCursor(cv::Mat& m,
       {
         if (toggle)
         {
-          m.at<cv::Vec3b>(i, j) = {
-              cursor[(j - (c * w)) + w * (i - (r * h))] * 255,
-              cursor[(j - (c * w)) + w * (i - (r * h))] * 255,
-              cursor[(j - (c * w)) + w * (i - (r * h))] * 255};
+          m.at<cv::Vec3b>(i, j) = (
+              (uint8_t)cursor[(j - (c * w)) + w * (i - (r * h))] * 255,
+              (uint8_t)cursor[(j - (c * w)) + w * (i - (r * h))] * 255,
+              (uint8_t)cursor[(j - (c * w)) + w * (i - (r * h))] * 255);
         }
         else
         {
