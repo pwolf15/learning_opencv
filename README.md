@@ -54,3 +54,7 @@ subset of dimensions that carry the most information.
 * kernel support: size of array 
 * linear kernel => convolution; sometimes used to refer any filter, even nonlinear
 * anchor point: how kernel is aligned to input image
+
+* OpenCV framework: python opencv/platforms/ios/build_framework.py ios --iphonesimulator_archs x86_64  --iphoneos_archs arm64 > out.txt 2>&1
+https://docs.opencv.org/4.x/d5/da3/tutorial_ios_install.html
+https://medium.com/@yiweini/opencv-with-swiaft-step-by-step-c3cc1d1ee5f1
