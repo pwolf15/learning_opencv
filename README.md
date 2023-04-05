@@ -58,3 +58,10 @@ subset of dimensions that carry the most information.
 * OpenCV framework: python opencv/platforms/ios/build_framework.py ios --iphonesimulator_archs x86_64  --iphoneos_archs arm64 > out.txt 2>&1
 https://docs.opencv.org/4.x/d5/da3/tutorial_ios_install.html
 https://medium.com/@yiweini/opencv-with-swiaft-step-by-step-c3cc1d1ee5f1
+
+# Trackers
+
+* Tracker documentation
+* KCF: kernelized correlation filter
+* Circulant matrix used to enhance processing speed
+* https://www.robots.ox.ac.uk/~joao/publications/henriques_tpami2015.pdf
